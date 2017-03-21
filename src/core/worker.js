@@ -521,12 +521,15 @@ var WorkerMessageHandler = {
         var numPagesPromise = pdfManager.ensureDoc('numPages');
         var fingerprintPromise = pdfManager.ensureDoc('fingerprint');
         var encryptedPromise = pdfManager.ensureXRef('encrypt');
+        var signaturesPromise = pdfManager.ensureDoc('signatures');
         Promise.all([numPagesPromise, fingerprintPromise,
-                     encryptedPromise]).then(function onDocReady(results) {
+                     encryptedPromise, signaturesPromise]).then(
+        function onDocReady(results) {
           var doc = {
             numPages: results[0],
             fingerprint: results[1],
             encrypted: !!results[2],
+            signatures: results[3],
           };
           loadDocumentCapability.resolve(doc);
         },
@@ -544,7 +547,9 @@ var WorkerMessageHandler = {
         }, parseFailure);
       }, parseFailure);
 
-      return loadDocumentCapability.promise;
+      return loadDocumentCapability.promise.then(function(doc) {
+        return doc;
+      });
     }
 
     function getPdfManager(data, evaluatorOptions) {

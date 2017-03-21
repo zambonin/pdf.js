@@ -28,6 +28,7 @@
     factory(exports, require('../shared/util.js'), require('./primitives.js'),
       require('./stream.js'), require('./parser.js'), require('./image.js'),
       require('./colorspace.js'), require('./murmurhash3.js'),
+      require('./signatures.js'),
       require('./fonts.js'), require('./function.js'), require('./pattern.js'),
       require('./cmap.js'), require('./metrics.js'), require('./bidi.js'),
       require('./encodings.js'), require('./standard_fonts.js'),

@@ -62,6 +62,11 @@ If everything worked out, install all dependencies for PDF.js:
 
     $ npm install
 
+For rudimentary digital signature support, one should run the following
+`sed` script:
+
+    $ sed -i -f external/pkijs.sed node_modules/pkijs/org/pkijs/common.js
+
 Finally you need to start a local web server as some browsers do not allow opening
 PDF files using a file:// URL. Run
 

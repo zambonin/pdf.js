@@ -20,20 +20,22 @@
     define('pdfjs/core/document', ['exports', 'pdfjs/shared/util',
       'pdfjs/core/primitives', 'pdfjs/core/stream', 'pdfjs/core/obj',
       'pdfjs/core/parser', 'pdfjs/core/crypto', 'pdfjs/core/evaluator',
-      'pdfjs/core/annotation'], factory);
+      'pdfjs/core/annotation', 'pdfjs/core/signatures'], factory);
   } else if (typeof exports !== 'undefined') {
     factory(exports, require('../shared/util.js'), require('./primitives.js'),
       require('./stream.js'), require('./obj.js'), require('./parser.js'),
       require('./crypto.js'), require('./evaluator.js'),
-      require('./annotation.js'));
+      require('./annotation.js'), require('./signatures.js'));
   } else {
     factory((root.pdfjsCoreDocument = {}), root.pdfjsSharedUtil,
       root.pdfjsCorePrimitives, root.pdfjsCoreStream,
       root.pdfjsCoreObj, root.pdfjsCoreParser, root.pdfjsCoreCrypto,
-      root.pdfjsCoreEvaluator, root.pdfjsCoreAnnotation);
+      root.pdfjsCoreEvaluator, root.pdfjsCoreAnnotation,
+      root.pdfjsCoreSignatures);
   }
 }(this, function (exports, sharedUtil, corePrimitives, coreStream, coreObj,
-                  coreParser, coreCrypto, coreEvaluator, coreAnnotation) {
+                  coreParser, coreCrypto, coreEvaluator, coreAnnotation,
+                  coreSignatures) {
 
 var OPS = sharedUtil.OPS;
 var MissingDataException = sharedUtil.MissingDataException;
@@ -65,6 +67,7 @@ var calculateMD5 = coreCrypto.calculateMD5;
 var OperatorList = coreEvaluator.OperatorList;
 var PartialEvaluator = coreEvaluator.PartialEvaluator;
 var AnnotationFactory = coreAnnotation.AnnotationFactory;
+var SignatureVerifierPromise = coreSignatures.SignatureVerifierPromise;
 
 var Page = (function PageClosure() {
 
@@ -637,6 +640,11 @@ var PDFDocument = (function PDFDocumentClosure() {
       }
 
       return shadow(this, 'fingerprint', fileID);
+    },
+
+    get signatures() {
+      var signatures = new SignatureVerifierPromise(this);
+      return shadow(this, 'signatures', signatures);
     },
 
     getPage: function PDFDocument_getPage(pageIndex) {
